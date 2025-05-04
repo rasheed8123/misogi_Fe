@@ -3,30 +3,24 @@ import { AuthContext } from '../context/AuthContext';
 import {
   TextField,
   Button,
-  Container,
   Typography,
   Box,
   Stack,
   Paper,
-  Divider
+  Link,
+  Divider,
+  Checkbox,
+  FormControlLabel
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import SnackbarAlert from './components/SnackbarAlert';
-import { Link as RouterLink } from 'react-router-dom';
-import { Link } from '@mui/material';
-import AuthBox from './components/AuthBox';
 import { ThemeContext } from '../context/ThemeContext';
-import LoginIcon from '@mui/icons-material/Login';
-import DesignServicesIcon from '@mui/icons-material/DesignServices';
-import CodeIcon from '@mui/icons-material/Code';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 export default function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
   const [snack, setSnack] = useState({ open: false, message: '', severity: 'info' });
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-
   const { setThemeName } = useContext(ThemeContext);
 
   useEffect(() => {
@@ -37,7 +31,6 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!form.username || !form.password) {
       return setSnack({ open: true, message: 'Both fields are required', severity: 'warning' });
     }
@@ -53,43 +46,60 @@ export default function Login() {
   };
 
   return (
-    <AuthBox>
-      <Paper elevation={3} sx={{ p: 4, borderRadius: 3, width: '100%', maxWidth: 500 }}>
-        <Stack spacing={3}>
-          <Typography variant="h4" align="center" fontWeight="bold">
-            <LoginIcon fontSize="large" sx={{ verticalAlign: 'middle', mr: 1 }} />
+    <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Paper sx={{ display: 'flex', borderRadius: 3, overflow: 'hidden', width: '90%', maxWidth: 1000 }}>
+        {/* Left side (form) */}
+        <Box sx={{ flex: 1, p: 4, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <Box mb={2} sx={{ textAlign: 'center' }}>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQynY1SigB7a3ob3Etoi4EARhILzxyws6GrQ&s" alt="Logo" style={{ maxHeight: 50 }} />
+          </Box>
+          <Typography variant="h5" fontWeight="bold" align="center" gutterBottom>
             Sign In
           </Typography>
-
-          <Typography variant="body1" align="center" color="text.secondary">
-            Build your dynamic portfolio with modular case studies — whether you're a
-            <DesignServicesIcon fontSize="small" sx={{ mx: 0.5, verticalAlign: 'middle' }} /> designer,
-            <CodeIcon fontSize="small" sx={{ mx: 0.5, verticalAlign: 'middle' }} /> developer, or
-            <MenuBookIcon fontSize="small" sx={{ mx: 0.5, verticalAlign: 'middle' }} /> writer.
-          </Typography>
-
-          <Divider />
-
           <form onSubmit={handleSubmit}>
             <Stack spacing={2}>
-              <TextField fullWidth label="Username" name="username" onChange={handleChange} />
-              <TextField fullWidth label="Password" name="password" type="password" onChange={handleChange} />
-              <Button fullWidth variant="contained" type="submit" size="large">Login</Button>
+              <TextField label="Username" name="username" fullWidth onChange={handleChange} />
+              <TextField label="Password" name="password" type="password" fullWidth onChange={handleChange} />
+              {/* <FormControlLabel control={<Checkbox />} label="Remember Me" /> */}
+              <Button type="submit" variant="contained" fullWidth>Login</Button>
+              {/* <Link component={RouterLink} to="/forgot-password" underline="hover" textAlign="right">
+                Forgot Password?
+              </Link> */}
             </Stack>
           </form>
+          <Divider sx={{ my: 3 }} />
+          <Typography variant="body2" align="center">
+            Don’t have an account?{' '}
+            <Link component={RouterLink} to="/register" underline="hover">Register</Link>
+          </Typography>
+          <Typography variant="caption" align="center" display="block" sx={{ mt: 2 }}>
+            By signing up, you agree to our{' '}
+            <Link href="#" underline="hover">Terms and Conditions</Link> &{' '}
+            <Link href="#" underline="hover">Privacy Policy</Link>
+          </Typography>
+        </Box>
 
-          <Box textAlign="center">
-            <Typography variant="body2">
-              Don’t have an account?{' '}
-              <Link component={RouterLink} to="/register" underline="hover">
-                Register
-              </Link>
-            </Typography>
-          </Box>
-        </Stack>
+        {/* Right side (illustration) */}
+        <Box
+          sx={{
+            flex: 1,
+            backgroundImage: `url(https://i.pinimg.com/736x/5a/2c/3b/5a2c3b5244964acbaa8c35bc2509763f.jpg)`, // replace with your actual image path
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            display: { xs: 'none', md: 'block' }
+          }}
+        />
       </Paper>
 
+      {/* Footer */}
+      <Box position="absolute" bottom={16} textAlign="center" width="100%">
+        <Typography variant="caption">
+          Powered by <strong style={{ color: '#f68b1f' }}>Rasheed</strong>{' '}
+          <strong style={{ color: '#0046be' }}>Ahmed</strong> &copy; All rights reserved
+        </Typography>
+      </Box>
+
       <SnackbarAlert {...snack} onClose={() => setSnack({ ...snack, open: false })} />
-    </AuthBox>
+    </Box>
   );
 }
